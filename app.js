@@ -22,6 +22,7 @@ var getDataFromDb = (db, callback) => {
 }
 
 app.get('/builds', (req, res) => {
+    console.log('Wanker')
     MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(client => {
             let db = client.db(dbName)
@@ -46,13 +47,15 @@ app.get('/builds', (req, res) => {
         })
 })
 
-app.get('/builds/:id'), (req, res) => {
-    requestID = req.params.id
+app.get('/builds/:title', (req, res) => {
+    console.log('Route activated.')
+    let requestID = req.params.title
+    console.log(requestID)
     MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(client => {
             let db = client.db(dbName)
             let collection = db.collection('player-builds')
-            collection.find({_id: {requestID}}).toArray()
+            collection.find({ title: requestID }).toArray()
                 .then((docs) => {
                     if (docs.length === 0) {
                         return composeResponseJson(res, 500, false, 'Data not found', docs)
@@ -70,7 +73,7 @@ app.get('/builds/:id'), (req, res) => {
             console.log(err)
             return composeResponseJson(res, 500, false, 'Server error.', [])
         })
-}
+})
 
 
 const composeResponseJson = function (res, status, success, message, data) {
