@@ -55,7 +55,7 @@ app.get('/builds/:title', (req, res) => {
         .then(client => {
             let db = client.db(dbName)
             let collection = db.collection('player-builds')
-            collection.find({ title: requestID }).toArray()
+            collection.findOne({ title: requestID })
                 .then((docs) => {
                     if (docs.length === 0) {
                         return composeResponseJson(res, 500, false, 'Data not found', docs)
